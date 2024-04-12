@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Price Scout",
-  description: "Cheap Price Locator",
+  title: "Product Scout",
+  description: "How healthy is your food?",
 };
 
 export default function RootLayout({

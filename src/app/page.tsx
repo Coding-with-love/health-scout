@@ -45,7 +45,7 @@ const Component: React.FC = () => {
         <div className="container flex items-center justify-between px-4 md:px-6">
         <Link className="flex items-center space-x-2 text-gray-50" href="#">
             <ShoppingBagIcon className="w-8 h-8" />
-            <span className="font-semibold tracking-wide">Price Scout</span>
+            <span className="font-semibold tracking-wide">Product Scout</span>
           </Link>
           <div className="relative">
             <Input
@@ -66,22 +66,25 @@ const Component: React.FC = () => {
       </header>
 
       {/* Main content */}
-      <main className="flex-1">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 md:px-6 py-12 lg:py-24">
-          <div className="flex flex-col items-center gap-4 text-center">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-              Find out if a product is good for you
-            </h1>
-            <p className="max-w-[600px] text-gray-500 dark:text-gray-400">
-              Search for a product by its barcode to get detailed information about it. 
-            </p>
-            {productData && (
-              <div className="text-left">
-                <h2 className="text-lg font-bold">Product Data:</h2>
-                <pre>{JSON.stringify(productData, null, 2)}</pre>
-              </div>
-            )}
-          </div>
+      <main className="flex flex-col items-center justify-center flex-1 w-full">
+        <div className="w-full max-w-lg p-4">
+          <Input
+            aria-label="Search for products"
+            className="w-full mb-4"
+            placeholder="Enter barcode"
+            type="search"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <Button onClick={handleSearch} size="sm" variant="outline">
+            Search
+          </Button>
+          {productData && (
+            <div className="mt-4 bg-gray-100 p-4 rounded shadow">
+              <h2 className="text-lg font-bold mb-2">Product Data:</h2>
+              <pre className="whitespace-pre-wrap text-xs">{JSON.stringify(productData, null, 2)}</pre>
+            </div>
+          )}
         </div>
       </main>
 
