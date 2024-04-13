@@ -6,18 +6,313 @@ import { Button } from "@/components/ui/button";
 import { debounce } from '@/lib/utils'; // Adjust the path as per your project structure
 import { JSX, SVGProps} from "react"
 import { useState } from 'react';
+import Image from 'next/image';
+
 interface ProductData {
   product: {
-    text: string;
+    product_name?: string;
+    code?: string;
+    quantity?: string;
+    image_url?: string;
+    brands?: string;
+    brand_owner?: string;
+    packaging?: string;
+    categories?: string;
+    countries?: string;
+    nutriscore_grade?: string; // assuming this is part of the data
+    nova_group?: number; // assuming this is part of the data
+    ecoscore_grade?: string; // assuming this is part of the data
+    ingredients_text?: string;
+    image_ingredients_url?: string;
+    additives_tags?: string[];
+    nutriscore_score?: number;
+    image_nutrition_url?: string;
+    compared_to_category?: string;
+    energy_100g: number;
+    energy_serving: number;
+    energy_unit: string;
+    nutriscore_data: {
+      positive_points?: number;
+      proteins_points?: number;
+      fiber_points?: number;
+      fruits_vegetables_nuts_colza_walnut_olive_oils_points?: number;
+      negative_points?: number;
+      energy_points?: number;
+      sugars_points?: number;
+      saturated_fat_points?: number;
+      sodium_points?: number;
+    }
+    nutriments: {
+      fat: number;
+      saturated_fat: number;
+      sugars: number;
+      salt: number;
+    }
+
+     // assuming this is part of the data
   };
-  status: number;
-  status_verbose: string;
+  // ... additional data from the API response
 }
+
+
+const PreferencesSection = ({
+  nutriScore,
+  novaScore,
+  ecoScore,
+}: {
+  nutriScore?: string;
+  novaScore?: string | number;
+  ecoScore?: string;
+}) => {
+  // If a score is not provided (undefined), it defaults to 'N/A'
+  nutriScore = nutriScore ?? 'N/A';
+  novaScore = novaScore ?? 'N/A';
+  ecoScore = ecoScore ?? 'N/A';
+  return (
+    <div className="my-8 p-4 bg-white rounded-lg shadow">
+      <h2 className="text-xl font-bold mb-4">Matching with your preferences</h2>
+      <div className="flex flex-wrap gap-4">
+        <div className="flex items-center gap-2">
+          <div className={`p-2 text-white rounded-full ${nutriScoreColor(nutriScore)}`}>
+            Nutri-Score {nutriScore}
+          </div>
+          <p>Bad nutritional quality</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="bg-yellow-400 p-2 rounded-full text-white">
+            NOVA {novaScore}
+          </div>
+          <p>Ultra processed foods</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="bg-green-500 p-2 rounded-full text-white">
+            Eco-Score {ecoScore}
+          </div>
+          <p>Low environmental impact</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const nutriScoreColor = (score: string) => {
+  switch(score) {
+    case 'A': return 'bg-green-500';
+    case 'B': return 'bg-green-400';
+    case 'C': return 'bg-yellow-400';
+    case 'D': return 'bg-orange-500';
+    case 'E': return 'bg-red-600';
+    default: return 'bg-gray-300';
+  }
+};
+const HealthSection = ({
+  ingredients,
+  ingredientsImage,
+  novaScore,
+  additives,
+  nutriScore,
+  positivePoints,
+  proteinsPoints,
+  fiberPoints,
+  fruitsPoints,
+  negativePoints,
+  energyPoints,
+  sugarsPoints,
+  saturatedFatPoints,
+  sodiumPoints,
+  energyGram,
+  category,
+ energyMainUnit,
+nutriscore,
+  nutriImage,
+  fatPercentage,
+  sugarsPercentage,
+  saturatedFatPercentage,
+  saltPercentage,
+  energyServing,
+  
+  
+}: {
+  ingredients: string;
+  ingredientsImage: string;
+  novaScore?: number;
+  additives?: string[];
+  nutriScore?: string;
+  positivePoints?: number;
+  proteinsPoints?: number;
+  fiberPoints?: number;
+  fruitsPoints?: number;
+  negativePoints?: number;
+  energyPoints?: number;
+  sugarsPoints?: number;
+  saturatedFatPoints?: number;
+  sodiumPoints?: number;
+  nutriscore?: number;
+  nutriImage?: string;
+  fatPercentage?: number;
+  sugarsPercentage?: number;
+  saturatedFatPercentage?: number;
+  saltPercentage?: number;
+  energyGram?: number;
+  energyServing?: number;
+  category?: string;
+ energyMainUnit?: string;
+}) => {
+  ingredients = ingredients ?? 'N/A';
+  ingredientsImage = ingredientsImage ?? 'N/A';
+  novaScore = novaScore || undefined;
+  additives = additives ?? [];
+  nutriScore = nutriScore ?? 'N/A';
+  positivePoints = positivePoints || undefined;
+  proteinsPoints = proteinsPoints || undefined;
+  fiberPoints = fiberPoints || undefined;
+  fruitsPoints = fruitsPoints || undefined;
+  negativePoints = negativePoints || undefined;
+  energyPoints = energyPoints || undefined;
+  sugarsPoints = sugarsPoints || undefined;
+  saturatedFatPoints = saturatedFatPoints || undefined;
+  sodiumPoints = sodiumPoints || undefined;
+  nutriscore = nutriscore || undefined;
+  nutriImage = nutriImage || 'N/A';
+  fatPercentage = fatPercentage || undefined;
+  sugarsPercentage = sugarsPercentage || undefined;
+  saturatedFatPercentage = saturatedFatPercentage || undefined;
+  saltPercentage = saltPercentage || undefined;
+  energyGram = energyGram || undefined;
+  energyServing = energyServing || undefined;
+  category = category || 'N/A';
+ energyMainUnit =energyMainUnit || 'N/A';
+
+  return (
+    <div>
+      <div className="my-8 p-4 bg-white rounded-lg shadow">
+        <h2 className="text-xl font-bold mb-4">Health</h2>
+        <section>
+          <h3 style={{ fontSize: '1rem', fontWeight: 'bold' }}>Ingredients</h3>
+          <p>{ingredients}</p>
+          {/* Placeholder image */}
+          {ingredientsImage !== 'N/A' ? (
+            <Image
+              src={ingredientsImage}
+              alt="Ingredients label"
+              width={400}
+              height={300}
+              layout="responsive"
+            />
+          ) : (
+            <p>No image available</p>
+          )}
+        </section>
+      </div>
+
+      <div className="my-8 p-4 bg-white rounded-lg shadow">
+        <h2 className="text-xl font-bold mb-4">Food Processing</h2>
+        <section>
+            <div className={`p-2 ${novaScoreColor(novaScore || 0)} rounded-full text-white`}>
+            <h3>NOVA {novaScore}</h3>
+            <p>Ultra processed foods</p>
+          </div>
+          {additives.length > 0 ? (
+            <div>
+              <h3 className="font-bold mt-4">Additives</h3>
+              <ul className="list-disc pl-5">
+                {additives.map((additive, index) => (
+                  <li key={index}>{additive}</li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p>No additives information available</p>
+          )}
+          <p className="mt-4">
+            The determination of the group is based on the category of the product and on the ingredients it contains.
+          </p>
+          {/* ... more NOVA classification info here */}
+        </section>
+      </div>
+      <div className="my-8 p-4 bg-white rounded-lg shadow">
+        <h2 className="text-xl font-bold mb-4">Nutrition</h2>
+        <section>
+            <div className={`p-2 ${novaScoreColor(novaScore || 0)} rounded-full text-white`}>
+            <h3>Nutri-Score {nutriScore}</h3>
+            <p>Bad nutritional quality</p>
+          </div>
+         
+          <p className="mt-4">
+            Positive Points: {positivePoints}
+          </p>
+         
+            <p>Proteins: {proteinsPoints}/5</p>
+            <p>Fiber: {fiberPoints}/5</p>
+            <p>Fruits, vegetables, nuts, and colza/walnut/olive oils: {fruitsPoints}/5</p>
+          <br></br>
+          <p className="mt-4">
+            Negative Points: {positivePoints}
+          </p>
+         
+            <p>Energy: {energyPoints}/5</p>
+            <p>Sugars: {sugarsPoints}/5</p>
+            <p>Saturated Fat: {saturatedFatPoints}/5</p>
+            <p>Sodium: {sodiumPoints}/5</p>
+<br></br>
+<p>Nutritional Score: {nutriscore}</p>
+                <div className="w-full md:w-48 relative">
+                <Image 
+  src={nutriImage}
+  alt="Nutrition Image"
+  width={400} // These should be the intrinsic dimensions of the image
+  height={300} // Or the aspect ratio that you desire
+  layout="responsive" // This makes the image scale nicely to the parent element's width
+/>
+
+                </div>
+             <br></br>
+             <h3>Nutrient Levels</h3>
+             <p>Fat in high quantity: {fatPercentage}%</p>
+              <p>Saturated fat in high quantity: {fatPercentage}%</p>
+              <p>Sugars in high quantity: {sugarsPercentage}%</p>
+              <p>Salt in high quantity: {saltPercentage}%</p>
+              <br></br>
+              
+          {/*<h3>Nutrition Facts</h3>
+              <table>
+                <tr>
+                  <td>Nutrition Facts</td>
+                  <td>As sold 
+                    for 100 g / 100 ml</td>
+                  <td>As sold 
+                    per serving (5 crackers (16 g) (16 g))</td>
+                  <td>Compared to: {category}</td>
+                </tr>
+                <tr>
+                  <td>Energy</td>
+                  <td>{energyGram} {energyUnit}</td>
+                  <td>{energyServing}</td>
+                  <td></td>
+                </tr>
+              </table> */}
+        </section>
+      </div>
+      
+    </div>
+  );
+};
+
+const novaScoreColor = (score: number) => {
+  switch (score) {
+    case 1: return 'bg-green-500';
+    case 2: return 'bg-green-300';
+    case 3: return 'bg-yellow-500';
+    case 4: return 'bg-red-600';
+    default: return 'bg-gray-300';
+  }
+};
+
 
 const Component: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [productData, setProductData] = useState<ProductData | null>(null);
-
+ 
   const fetchProductData = async (barcode: string): Promise<void> => {
     try {
       const response = await fetch(`https://world.openfoodfacts.net/api/v2/product/${barcode}`);
@@ -31,13 +326,13 @@ const Component: React.FC = () => {
     }
   };
 
-  const handleSearch = (): void => {
-    if (inputValue && /^\d+$/.test(inputValue)) { // Check if input is numeric
-      fetchProductData(inputValue);
+  const handleSearch = debounce((value: string): void => {
+    if (value && /^\d+$/.test(value)) {
+      fetchProductData(value);
     } else {
       console.error("Invalid barcode input");
     }
-  };
+  }, 400);
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
@@ -67,26 +362,94 @@ const Component: React.FC = () => {
 
       {/* Main content */}
       <main className="flex flex-col items-center justify-center flex-1 w-full">
-        <div className="w-full max-w-lg p-4">
-          <Input
-            aria-label="Search for products"
-            className="w-full mb-4"
-            placeholder="Enter barcode"
-            type="search"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          <Button onClick={handleSearch} size="sm" variant="outline">
-            Search
-          </Button>
-          {productData && (
-            <div className="mt-4 bg-gray-100 p-4 rounded shadow">
-              <h2 className="text-lg font-bold mb-2">Product Data:</h2>
-              <pre className="whitespace-pre-wrap text-xs">{JSON.stringify(productData, null, 2)}</pre>
+      <div className="w-full max-w-lg p-4">
+        <Input
+          aria-label="Search for products"
+          className="w-full mb-4"
+          placeholder="Enter barcode"
+          type="search"
+          value={inputValue}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch(inputValue);
+            }
+          }}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+        <Button onClick={() => handleSearch(inputValue)} size="sm" variant="outline">
+          Search
+        </Button>
+        {productData && (
+          <div className="container mx-auto mt-8 p-4">
+            <div className="flex flex-col md:flex-row md:items-center bg-white shadow-lg rounded-lg overflow-hidden">
+              {productData.product.image_url && (
+                <div className="w-full md:w-48 relative">
+                <Image 
+  src={productData.product.image_url}
+  alt="Product Image"
+  width={400} // These should be the intrinsic dimensions of the image
+  height={300} // Or the aspect ratio that you desire
+  layout="responsive" // This makes the image scale nicely to the parent element's width
+/>
+
+                </div>
+              )}
+              <div className="p-4">
+                <h1 className="text-2xl font-bold mb-2">
+                  {productData.product.product_name || 'Product Name'}
+                </h1>
+                <p className="text-gray-700 mb-1">Barcode: {productData.product.code || 'Barcode Information'}</p>
+                <p className="text-gray-700 mb-1">Quantity: {productData.product.quantity || 'Quantity Information'}</p>
+                <p className="text-gray-700 mb-1">Brand: {productData.product.brands || 'Brand Information'}</p>
+                <p className="text-gray-700 mb-1">Brand Owner: {productData.product.brand_owner || 'Brand Owner Information'}</p>
+                <p className="text-gray-700 mb-1">Packaging: {productData.product.packaging || 'Packaging Information'}</p>
+                <p className="text-gray-700 mb-1">Categories: {productData.product.categories || 'Category Information'}</p>
+                <p className="text-gray-700 mb-1">Countries where sold: {productData.product.countries || 'Country Information'}</p>
+                {/* ... more product information */}
+              </div>
             </div>
-          )}
-        </div>
-      </main>
+          </div>
+        )}
+
+{productData && productData.product && (
+          <PreferencesSection 
+            nutriScore={productData.product.nutriscore_grade}
+            novaScore={productData.product.nova_group}
+            ecoScore={productData.product.ecoscore_grade}
+          />
+        )}
+        {productData && productData.product && (
+  <>
+    <HealthSection
+      ingredients={productData.product.ingredients_text || 'N/A'}
+      ingredientsImage={productData.product.image_ingredients_url || 'N/A'}
+      novaScore={productData.product.nova_group}
+      additives={productData.product.additives_tags}
+      nutriScore={productData.product.nutriscore_grade}
+      positivePoints={productData.product.nutriscore_data.positive_points}
+      proteinsPoints={productData.product.nutriscore_data.proteins_points}
+      fiberPoints={productData.product.nutriscore_data.fiber_points}
+      fruitsPoints={productData.product.nutriscore_data.fruits_vegetables_nuts_colza_walnut_olive_oils_points}
+      negativePoints={productData.product.nutriscore_data.negative_points}
+      energyPoints={productData.product.nutriscore_data.energy_points}
+      sugarsPoints={productData.product.nutriscore_data.sugars_points}
+      saturatedFatPoints={productData.product.nutriscore_data.saturated_fat_points}
+      sodiumPoints={productData.product.nutriscore_data.sodium_points}
+      nutriscore={productData.product.nutriscore_score}
+      nutriImage={productData.product.image_nutrition_url}
+      fatPercentage={productData.product.nutriments.fat}
+      sugarsPercentage={productData.product.nutriments.sugars}
+      saturatedFatPercentage={productData.product.nutriments.saturated_fat}
+      saltPercentage={productData.product.nutriments.salt}
+      category={productData.product.compared_to_category}
+      energyGram={productData.product.energy_100g}
+      energyServing={productData.product.energy_serving}
+     energyMainUnit={productData.product.energy_unit}
+    />
+  </>
+)}
+      </div>
+    </main>
 
       {/* Footer */}
       <footer className="py-12 md:py-24">
