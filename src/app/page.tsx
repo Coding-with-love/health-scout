@@ -1,13 +1,14 @@
 "use client";
+import dynamic from 'next/dynamic';
 import React from 'react';
 import Link from 'next/link';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { debounce } from '@/lib/utils'; // Adjust the path as per your project structure
 import { JSX, SVGProps} from "react"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-
+import BarcodeScanner from '../../components/barcodeScanner/scanner';
 interface ProductData {
   product: {
     product_name?: string;
@@ -312,15 +313,23 @@ const novaScoreColor = (score: number) => {
 const Component: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [productData, setProductData] = useState<ProductData | null>(null);
+  const [barcode, setBarcode] = useState('');
+
  
+  const handleDetected = (barcodeValue: string) => {
+    setBarcode(barcodeValue);
+    console.log(`Barcode detected: ${barcodeValue}`);
+  };
+ 
+
   const fetchProductData = async (barcode: string): Promise<void> => {
     try {
       const response = await fetch(`https://world.openfoodfacts.net/api/v2/product/${barcode}`);
       if (!response.ok) {
         throw new Error('Failed to fetch product data');
       }
-      const data: ProductData = await response.json();
-      setProductData(data); // Store fetched data in state
+      const data = await response.json();
+      setProductData(data);
     } catch (error) {
       console.error('Fetching error:', error);
     }
@@ -333,6 +342,11 @@ const Component: React.FC = () => {
       console.error("Invalid barcode input");
     }
   }, 400);
+
+  // Example constraints to use the rear-facing camera
+  const videoConstraints = {
+    facingMode: "environment"
+  };
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
@@ -379,6 +393,11 @@ const Component: React.FC = () => {
         <Button onClick={() => handleSearch(inputValue)} size="sm" variant="outline">
           Search
         </Button>
+        <div>
+      <h1>Scan your Barcode</h1>
+      <BarcodeScanner onDetected={handleDetected} />
+      <p>Detected Barcode: {barcode}</p>
+    </div>
         {productData && (
           <div className="container mx-auto mt-8 p-4">
             <div className="flex flex-col md:flex-row md:items-center bg-white shadow-lg rounded-lg overflow-hidden">

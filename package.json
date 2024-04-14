@@ -15,8 +15,11 @@
     "lucide-react": "^0.367.0",
     "next": "14.2.0",
     "openfoodfacts-nodejs": "^0.1.0",
+    "quagga": "^0.12.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-qr-reader": "^3.0.0-beta-1",
+    "react-webcam-barcode-scanner": "^0.0.2-rc2",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7"
   },
