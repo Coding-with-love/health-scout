@@ -1,14 +1,15 @@
 "use client";
-import dynamic from 'next/dynamic';
-import React from 'react';
-import Link from 'next/link';
+import dynamic from "next/dynamic";
+import React from "react";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { debounce } from '@/lib/utils'; // Adjust the path as per your project structure
-import { JSX, SVGProps} from "react"
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import BarcodeScanner from '../../components/barcodeScanner/scanner';
+import { debounce } from "@/lib/utils"; // Adjust the path as per your project structure
+import { JSX, SVGProps } from "react";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import BarcodeScanner from "../../components/barcodeScanner/scanner";
+
 interface ProductData {
   product: {
     product_name?: string;
@@ -42,19 +43,18 @@ interface ProductData {
       sugars_points?: number;
       saturated_fat_points?: number;
       sodium_points?: number;
-    }
+    };
     nutriments: {
       fat: number;
       saturated_fat: number;
       sugars: number;
       salt: number;
-    }
+    };
 
-     // assuming this is part of the data
+    // assuming this is part of the data
   };
   // ... additional data from the API response
 }
-
 
 const PreferencesSection = ({
   nutriScore,
@@ -66,15 +66,19 @@ const PreferencesSection = ({
   ecoScore?: string;
 }) => {
   // If a score is not provided (undefined), it defaults to 'N/A'
-  nutriScore = nutriScore ?? 'N/A';
-  novaScore = novaScore ?? 'N/A';
-  ecoScore = ecoScore ?? 'N/A';
+  nutriScore = nutriScore ?? "N/A";
+  novaScore = novaScore ?? "N/A";
+  ecoScore = ecoScore ?? "N/A";
   return (
     <div className="my-8 p-4 bg-white rounded-lg shadow">
       <h2 className="text-xl font-bold mb-4">Matching with your preferences</h2>
       <div className="flex flex-wrap gap-4">
         <div className="flex items-center gap-2">
-          <div className={`p-2 text-white rounded-full ${nutriScoreColor(nutriScore)}`}>
+          <div
+            className={`p-2 text-white rounded-full ${nutriScoreColor(
+              nutriScore
+            )}`}
+          >
             Nutri-Score {nutriScore}
           </div>
           <p>Bad nutritional quality</p>
@@ -97,13 +101,19 @@ const PreferencesSection = ({
 };
 
 const nutriScoreColor = (score: string) => {
-  switch(score) {
-    case 'A': return 'bg-green-500';
-    case 'B': return 'bg-green-400';
-    case 'C': return 'bg-yellow-400';
-    case 'D': return 'bg-orange-500';
-    case 'E': return 'bg-red-600';
-    default: return 'bg-gray-300';
+  switch (score) {
+    case "A":
+      return "bg-green-500";
+    case "B":
+      return "bg-green-400";
+    case "C":
+      return "bg-yellow-400";
+    case "D":
+      return "bg-orange-500";
+    case "E":
+      return "bg-red-600";
+    default:
+      return "bg-gray-300";
   }
 };
 const HealthSection = ({
@@ -123,16 +133,14 @@ const HealthSection = ({
   sodiumPoints,
   energyGram,
   category,
- energyMainUnit,
-nutriscore,
+  energyMainUnit,
+  nutriscore,
   nutriImage,
   fatPercentage,
   sugarsPercentage,
   saturatedFatPercentage,
   saltPercentage,
   energyServing,
-  
-  
 }: {
   ingredients: string;
   ingredientsImage: string;
@@ -157,13 +165,13 @@ nutriscore,
   energyGram?: number;
   energyServing?: number;
   category?: string;
- energyMainUnit?: string;
+  energyMainUnit?: string;
 }) => {
-  ingredients = ingredients ?? 'N/A';
-  ingredientsImage = ingredientsImage ?? 'N/A';
+  ingredients = ingredients ?? "N/A";
+  ingredientsImage = ingredientsImage ?? "N/A";
   novaScore = novaScore || undefined;
   additives = additives ?? [];
-  nutriScore = nutriScore ?? 'N/A';
+  nutriScore = nutriScore ?? "N/A";
   positivePoints = positivePoints || undefined;
   proteinsPoints = proteinsPoints || undefined;
   fiberPoints = fiberPoints || undefined;
@@ -174,25 +182,25 @@ nutriscore,
   saturatedFatPoints = saturatedFatPoints || undefined;
   sodiumPoints = sodiumPoints || undefined;
   nutriscore = nutriscore || undefined;
-  nutriImage = nutriImage || 'N/A';
+  nutriImage = nutriImage || "N/A";
   fatPercentage = fatPercentage || undefined;
   sugarsPercentage = sugarsPercentage || undefined;
   saturatedFatPercentage = saturatedFatPercentage || undefined;
   saltPercentage = saltPercentage || undefined;
   energyGram = energyGram || undefined;
   energyServing = energyServing || undefined;
-  category = category || 'N/A';
- energyMainUnit =energyMainUnit || 'N/A';
+  category = category || "N/A";
+  energyMainUnit = energyMainUnit || "N/A";
 
   return (
     <div>
       <div className="my-8 p-4 bg-white rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">Health</h2>
         <section>
-          <h3 style={{ fontSize: '1rem', fontWeight: 'bold' }}>Ingredients</h3>
+          <h3 style={{ fontSize: "1rem", fontWeight: "bold" }}>Ingredients</h3>
           <p>{ingredients}</p>
           {/* Placeholder image */}
-          {ingredientsImage !== 'N/A' ? (
+          {ingredientsImage !== "N/A" ? (
             <Image
               src={ingredientsImage}
               alt="Ingredients label"
@@ -209,7 +217,11 @@ nutriscore,
       <div className="my-8 p-4 bg-white rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">Food Processing</h2>
         <section>
-            <div className={`p-2 ${novaScoreColor(novaScore || 0)} rounded-full text-white`}>
+          <div
+            className={`p-2 ${novaScoreColor(
+              novaScore || 0
+            )} rounded-full text-white`}
+          >
             <h3>NOVA {novaScore}</h3>
             <p>Ultra processed foods</p>
           </div>
@@ -226,7 +238,8 @@ nutriscore,
             <p>No additives information available</p>
           )}
           <p className="mt-4">
-            The determination of the group is based on the category of the product and on the ingredients it contains.
+            The determination of the group is based on the category of the
+            product and on the ingredients it contains.
           </p>
           {/* ... more NOVA classification info here */}
         </section>
@@ -234,47 +247,49 @@ nutriscore,
       <div className="my-8 p-4 bg-white rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">Nutrition</h2>
         <section>
-            <div className={`p-2 ${novaScoreColor(novaScore || 0)} rounded-full text-white`}>
+          <div
+            className={`p-2 ${novaScoreColor(
+              novaScore || 0
+            )} rounded-full text-white`}
+          >
             <h3>Nutri-Score {nutriScore}</h3>
             <p>Bad nutritional quality</p>
           </div>
-         
-          <p className="mt-4">
-            Positive Points: {positivePoints}
-          </p>
-         
-            <p>Proteins: {proteinsPoints}/5</p>
-            <p>Fiber: {fiberPoints}/5</p>
-            <p>Fruits, vegetables, nuts, and colza/walnut/olive oils: {fruitsPoints}/5</p>
-          <br></br>
-          <p className="mt-4">
-            Negative Points: {positivePoints}
-          </p>
-         
-            <p>Energy: {energyPoints}/5</p>
-            <p>Sugars: {sugarsPoints}/5</p>
-            <p>Saturated Fat: {saturatedFatPoints}/5</p>
-            <p>Sodium: {sodiumPoints}/5</p>
-<br></br>
-<p>Nutritional Score: {nutriscore}</p>
-                <div className="w-full md:w-48 relative">
-                <Image 
-  src={nutriImage}
-  alt="Nutrition Image"
-  width={400} // These should be the intrinsic dimensions of the image
-  height={300} // Or the aspect ratio that you desire
-  layout="responsive" // This makes the image scale nicely to the parent element's width
-/>
 
-                </div>
-             <br></br>
-             <h3>Nutrient Levels</h3>
-             <p>Fat in high quantity: {fatPercentage}%</p>
-              <p>Saturated fat in high quantity: {fatPercentage}%</p>
-              <p>Sugars in high quantity: {sugarsPercentage}%</p>
-              <p>Salt in high quantity: {saltPercentage}%</p>
-              <br></br>
-              
+          <p className="mt-4">Positive Points: {positivePoints}</p>
+
+          <p>Proteins: {proteinsPoints}/5</p>
+          <p>Fiber: {fiberPoints}/5</p>
+          <p>
+            Fruits, vegetables, nuts, and colza/walnut/olive oils:{" "}
+            {fruitsPoints}/5
+          </p>
+          <br></br>
+          <p className="mt-4">Negative Points: {positivePoints}</p>
+
+          <p>Energy: {energyPoints}/5</p>
+          <p>Sugars: {sugarsPoints}/5</p>
+          <p>Saturated Fat: {saturatedFatPoints}/5</p>
+          <p>Sodium: {sodiumPoints}/5</p>
+          <br></br>
+          <p>Nutritional Score: {nutriscore}</p>
+          <div className="w-full md:w-48 relative">
+            <Image
+              src={nutriImage}
+              alt="Nutrition Image"
+              width={400} // These should be the intrinsic dimensions of the image
+              height={300} // Or the aspect ratio that you desire
+              layout="responsive" // This makes the image scale nicely to the parent element's width
+            />
+          </div>
+          <br></br>
+          <h3>Nutrient Levels</h3>
+          <p>Fat in high quantity: {fatPercentage}%</p>
+          <p>Saturated fat in high quantity: {fatPercentage}%</p>
+          <p>Sugars in high quantity: {sugarsPercentage}%</p>
+          <p>Salt in high quantity: {saltPercentage}%</p>
+          <br></br>
+
           {/*<h3>Nutrition Facts</h3>
               <table>
                 <tr>
@@ -294,48 +309,48 @@ nutriscore,
               </table> */}
         </section>
       </div>
-      
     </div>
   );
 };
 
 const novaScoreColor = (score: number) => {
   switch (score) {
-    case 1: return 'bg-green-500';
-    case 2: return 'bg-green-300';
-    case 3: return 'bg-yellow-500';
-    case 4: return 'bg-red-600';
-    default: return 'bg-gray-300';
+    case 1:
+      return "bg-green-500";
+    case 2:
+      return "bg-green-300";
+    case 3:
+      return "bg-yellow-500";
+    case 4:
+      return "bg-red-600";
+    default:
+      return "bg-gray-300";
   }
 };
 
-
-const Component: React.FC = () => {
-  const [inputValue, setInputValue] = useState<string>('');
+const Home: React.FC = () => {
+  const [inputValue, setInputValue] = useState<string>("");
   const [productData, setProductData] = useState<ProductData | null>(null);
-  const [barcode, setBarcode] = useState('');
-  const [detectedBarcode, setDetectedBarcode] = useState('');
- 
-  const handleDetected = (barcodeValue: string) => {
-    setBarcode(barcodeValue);
-    console.log(`Barcode detected: ${barcodeValue}`);
+  const [barcode, setBarcode] = useState("");
+  const [isActive, setIsActive] = React.useState(false);
+
+  const handleDetected = (code: string) => {
+    setBarcode(code); // Set the detected barcode into state
+    setIsActive(false); // Optionally stop scanning after detection
   };
-  const handleBarcodeDetected = (barcode: any) => {
-    setDetectedBarcode(barcode);
-    console.log(`Barcode detected: ${barcode}`);
-  };
- 
 
   const fetchProductData = async (barcode: string): Promise<void> => {
     try {
-      const response = await fetch(`https://world.openfoodfacts.net/api/v2/product/${barcode}`);
+      const response = await fetch(
+        `https://world.openfoodfacts.net/api/v2/product/${barcode}`
+      );
       if (!response.ok) {
-        throw new Error('Failed to fetch product data');
+        throw new Error("Failed to fetch product data");
       }
       const data = await response.json();
       setProductData(data);
     } catch (error) {
-      console.error('Fetching error:', error);
+      console.error("Fetching error:", error);
     }
   };
 
@@ -349,14 +364,14 @@ const Component: React.FC = () => {
 
   // Example constraints to use the rear-facing camera
   const videoConstraints = {
-    facingMode: "environment"
+    facingMode: "environment",
   };
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
       <header className="bg-gray-900 py-4 sm:py-6 md:py-8">
         <div className="container flex items-center justify-between px-4 md:px-6">
-        <Link className="flex items-center space-x-2 text-gray-50" href="#">
+          <Link className="flex items-center space-x-2 text-gray-50" href="#">
             <ShoppingBagIcon className="w-8 h-8" />
             <span className="font-semibold tracking-wide">Product Scout</span>
           </Link>
@@ -369,125 +384,194 @@ const Component: React.FC = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
-            
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="#" className="font-medium text-gray-50 hover:underline dark:text-gray-400 dark:hover:underline">Sign in</Link>
-            <Link href="#" className="font-medium text-gray-50 hover:underline dark:text-gray-400 dark:hover:underline">Sign up</Link>
+            <Link
+              href="#"
+              className="font-medium text-gray-50 hover:underline dark:text-gray-400 dark:hover:underline"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="#"
+              className="font-medium text-gray-50 hover:underline dark:text-gray-400 dark:hover:underline"
+            >
+              Sign up
+            </Link>
           </div>
         </div>
       </header>
 
       {/* Main content */}
       <main className="flex flex-col items-center justify-center flex-1 w-full">
-      <div className="w-full max-w-lg p-4">
-        <Input
-          aria-label="Search for products"
-          className="w-full mb-4"
-          placeholder="Enter barcode"
-          type="search"
-          value={inputValue}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              handleSearch(inputValue);
-            }
-          }}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <Button onClick={() => handleSearch(inputValue)} size="sm" variant="outline">
-          Search
-        </Button>
-        <div>
+        <div className="w-full max-w-lg p-4">
+          <Input
+            aria-label="Search for products"
+            className="w-full mb-4"
+            placeholder="Enter barcode"
+            type="search"
+            value={inputValue}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                handleSearch(inputValue);
+              }
+            }}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <Button
+            onClick={() => handleSearch(inputValue)}
+            size="sm"
+            variant="outline"
+          >
+            Search
+          </Button>
+          <div>
       <h1>Scan a Barcode</h1>
-      <BarcodeScanner onBarcodeDetected={handleBarcodeDetected} />
-      <p>Detected Barcode: {detectedBarcode}</p>
-    </div>
-        {productData && (
-          <div className="container mx-auto mt-8 p-4">
-            <div className="flex flex-col md:flex-row md:items-center bg-white shadow-lg rounded-lg overflow-hidden">
-              {productData.product.image_url && (
-                <div className="w-full md:w-48 relative">
-                <Image 
-  src={productData.product.image_url}
-  alt="Product Image"
-  width={400} // These should be the intrinsic dimensions of the image
-  height={300} // Or the aspect ratio that you desire
-  layout="responsive" // This makes the image scale nicely to the parent element's width
-/>
+      <button onClick={() => setIsActive(!isActive)}>
+        {isActive ? "Stop Scanning" : "Start Scanning"}
+      </button>
 
+      {isActive && (
+        <BarcodeScanner
+          isActive={isActive}
+          onScanned={handleDetected}
+        />
+      )}
+
+      {/* Always render the barcode display, update only if a new barcode is detected */}
+      <p>Detected Barcode: {barcode || "No barcode detected"}</p>
+    </div>
+          {productData && (
+            <div className="container mx-auto mt-8 p-4">
+              <div className="flex flex-col md:flex-row md:items-center bg-white shadow-lg rounded-lg overflow-hidden">
+                {productData.product.image_url && (
+                  <div className="w-full md:w-48 relative">
+                    <Image
+                      src={productData.product.image_url}
+                      alt="Product Image"
+                      width={400} // These should be the intrinsic dimensions of the image
+                      height={300} // Or the aspect ratio that you desire
+                      layout="responsive" // This makes the image scale nicely to the parent element's width
+                    />
+                  </div>
+                )}
+                <div className="p-4">
+                  <h1 className="text-2xl font-bold mb-2">
+                    {productData.product.product_name || "Product Name"}
+                  </h1>
+                  <p className="text-gray-700 mb-1">
+                    Barcode: {productData.product.code || "Barcode Information"}
+                  </p>
+                  <p className="text-gray-700 mb-1">
+                    Quantity:{" "}
+                    {productData.product.quantity || "Quantity Information"}
+                  </p>
+                  <p className="text-gray-700 mb-1">
+                    Brand: {productData.product.brands || "Brand Information"}
+                  </p>
+                  <p className="text-gray-700 mb-1">
+                    Brand Owner:{" "}
+                    {productData.product.brand_owner ||
+                      "Brand Owner Information"}
+                  </p>
+                  <p className="text-gray-700 mb-1">
+                    Packaging:{" "}
+                    {productData.product.packaging || "Packaging Information"}
+                  </p>
+                  <p className="text-gray-700 mb-1">
+                    Categories:{" "}
+                    {productData.product.categories || "Category Information"}
+                  </p>
+                  <p className="text-gray-700 mb-1">
+                    Countries where sold:{" "}
+                    {productData.product.countries || "Country Information"}
+                  </p>
+                  {/* ... more product information */}
                 </div>
-              )}
-              <div className="p-4">
-                <h1 className="text-2xl font-bold mb-2">
-                  {productData.product.product_name || 'Product Name'}
-                </h1>
-                <p className="text-gray-700 mb-1">Barcode: {productData.product.code || 'Barcode Information'}</p>
-                <p className="text-gray-700 mb-1">Quantity: {productData.product.quantity || 'Quantity Information'}</p>
-                <p className="text-gray-700 mb-1">Brand: {productData.product.brands || 'Brand Information'}</p>
-                <p className="text-gray-700 mb-1">Brand Owner: {productData.product.brand_owner || 'Brand Owner Information'}</p>
-                <p className="text-gray-700 mb-1">Packaging: {productData.product.packaging || 'Packaging Information'}</p>
-                <p className="text-gray-700 mb-1">Categories: {productData.product.categories || 'Category Information'}</p>
-                <p className="text-gray-700 mb-1">Countries where sold: {productData.product.countries || 'Country Information'}</p>
-                {/* ... more product information */}
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-{productData && productData.product && (
-          <PreferencesSection 
-            nutriScore={productData.product.nutriscore_grade}
-            novaScore={productData.product.nova_group}
-            ecoScore={productData.product.ecoscore_grade}
-          />
-        )}
-        {productData && productData.product && (
-  <>
-    <HealthSection
-      ingredients={productData.product.ingredients_text || 'N/A'}
-      ingredientsImage={productData.product.image_ingredients_url || 'N/A'}
-      novaScore={productData.product.nova_group}
-      additives={productData.product.additives_tags}
-      nutriScore={productData.product.nutriscore_grade}
-      positivePoints={productData.product.nutriscore_data.positive_points}
-      proteinsPoints={productData.product.nutriscore_data.proteins_points}
-      fiberPoints={productData.product.nutriscore_data.fiber_points}
-      fruitsPoints={productData.product.nutriscore_data.fruits_vegetables_nuts_colza_walnut_olive_oils_points}
-      negativePoints={productData.product.nutriscore_data.negative_points}
-      energyPoints={productData.product.nutriscore_data.energy_points}
-      sugarsPoints={productData.product.nutriscore_data.sugars_points}
-      saturatedFatPoints={productData.product.nutriscore_data.saturated_fat_points}
-      sodiumPoints={productData.product.nutriscore_data.sodium_points}
-      nutriscore={productData.product.nutriscore_score}
-      nutriImage={productData.product.image_nutrition_url}
-      fatPercentage={productData.product.nutriments.fat}
-      sugarsPercentage={productData.product.nutriments.sugars}
-      saturatedFatPercentage={productData.product.nutriments.saturated_fat}
-      saltPercentage={productData.product.nutriments.salt}
-      category={productData.product.compared_to_category}
-      energyGram={productData.product.energy_100g}
-      energyServing={productData.product.energy_serving}
-     energyMainUnit={productData.product.energy_unit}
-    />
-  </>
-)}
-      </div>
-    </main>
+          {productData && productData.product && (
+            <PreferencesSection
+              nutriScore={productData.product.nutriscore_grade}
+              novaScore={productData.product.nova_group}
+              ecoScore={productData.product.ecoscore_grade}
+            />
+          )}
+          {productData && productData.product && (
+            <>
+              <HealthSection
+                ingredients={productData.product.ingredients_text || "N/A"}
+                ingredientsImage={
+                  productData.product.image_ingredients_url || "N/A"
+                }
+                novaScore={productData.product.nova_group}
+                additives={productData.product.additives_tags}
+                nutriScore={productData.product.nutriscore_grade}
+                positivePoints={
+                  productData.product.nutriscore_data.positive_points
+                }
+                proteinsPoints={
+                  productData.product.nutriscore_data.proteins_points
+                }
+                fiberPoints={productData.product.nutriscore_data.fiber_points}
+                fruitsPoints={
+                  productData.product.nutriscore_data
+                    .fruits_vegetables_nuts_colza_walnut_olive_oils_points
+                }
+                negativePoints={
+                  productData.product.nutriscore_data.negative_points
+                }
+                energyPoints={productData.product.nutriscore_data.energy_points}
+                sugarsPoints={productData.product.nutriscore_data.sugars_points}
+                saturatedFatPoints={
+                  productData.product.nutriscore_data.saturated_fat_points
+                }
+                sodiumPoints={productData.product.nutriscore_data.sodium_points}
+                nutriscore={productData.product.nutriscore_score}
+                nutriImage={productData.product.image_nutrition_url}
+                fatPercentage={productData.product.nutriments.fat}
+                sugarsPercentage={productData.product.nutriments.sugars}
+                saturatedFatPercentage={
+                  productData.product.nutriments.saturated_fat
+                }
+                saltPercentage={productData.product.nutriments.salt}
+                category={productData.product.compared_to_category}
+                energyGram={productData.product.energy_100g}
+                energyServing={productData.product.energy_serving}
+                energyMainUnit={productData.product.energy_unit}
+              />
+            </>
+          )}
+        </div>
+      </main>
 
       {/* Footer */}
       <footer className="py-12 md:py-24">
         <div className="container flex flex-col items-center justify-center gap-4 px-4 md:px-6 text-center">
-          <span className="text-sm text-gray-500 dark:text-gray-400">© 2024 Product Scout. All rights reserved.</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            © 2024 Product Scout. All rights reserved.
+          </span>
           <div className="flex items-center gap-2">
-            <Link href="#" className="rounded-full border p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50">
+            <Link
+              href="#"
+              className="rounded-full border p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+            >
               <span className="sr-only">Twitter</span>
               <TwitterIcon className="w-4 h-4" />
             </Link>
-            <Link href="#" className="rounded-full border p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50">
+            <Link
+              href="#"
+              className="rounded-full border p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+            >
               <span className="sr-only">GitHub</span>
               <GithubIcon className="w-4 h-4" />
             </Link>
-            <Link href="#" className="rounded-full border p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50">
+            <Link
+              href="#"
+              className="rounded-full border p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
+            >
               <span className="sr-only">LinkedIn</span>
               <LinkedinIcon className="w-4 h-4" />
             </Link>
@@ -495,9 +579,8 @@ const Component: React.FC = () => {
         </div>
       </footer>
     </div>
-  )
-  
-}
+  );
+};
 function GithubIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -515,11 +598,12 @@ function GithubIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
       <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
       <path d="M9 18c-4.51 2-5-2-7-2" />
     </svg>
-  )
+  );
 }
 
-
-function LinkedinIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+function LinkedinIcon(
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) {
   return (
     <svg
       {...props}
@@ -537,11 +621,12 @@ function LinkedinIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) 
       <rect width="4" height="12" x="2" y="9" />
       <circle cx="4" cy="4" r="2" />
     </svg>
-  )
+  );
 }
 
-
-function ShoppingBagIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+function ShoppingBagIcon(
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) {
   return (
     <svg
       {...props}
@@ -559,9 +644,8 @@ function ShoppingBagIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement
       <path d="M3 6h18" />
       <path d="M16 10a4 4 0 0 1-8 0" />
     </svg>
-  )
+  );
 }
-
 
 function TwitterIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
@@ -579,5 +663,6 @@ function TwitterIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
     >
       <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
     </svg>
-  )}
-export default Component;
+  );
+}
+export default Home;
