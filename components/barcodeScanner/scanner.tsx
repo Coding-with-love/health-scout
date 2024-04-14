@@ -18,22 +18,32 @@ const BarcodeScanner = (props: ScannerProps): React.ReactElement => {
             type: "LiveStream",
             target: videoRef.current ?? undefined, // Ensure this is rendered and available
             constraints: {
-                facingMode: "environment", // Use the rear-facing camera
-                width: 640,
-                height: 480
+                facingMode: "environment",
+                width: 1280,
+                height: 720
             }
         },
         decoder: {
-            readers: ["code_128_reader", "upc_reader", "ean_reader"] // As an example
-        }
+          readers: ["upc_reader"], // Specify your barcode formats
+          multiple: false, // Set to 'true' if expecting multiple barcodes
+          debug: {
+              drawBoundingBox: true,
+              showFrequency: true,
+              drawScanline: true,
+              showPattern: true
+          },
+      }
+      
     }, function(err) {
         if (err) {
             console.error("Initialization error:", err);
             return;
         }
-        console.log("Initialization succeeded");
+        console.log("Initialization finished. Ready to start");
         Quagga.start();
     });
+    
+    
     
     Quagga.onDetected((result) => {
       console.log("Detection result:", result);

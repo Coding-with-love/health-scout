@@ -66,32 +66,26 @@ const PreferencesSection = ({
   ecoScore?: string;
 }) => {
   // If a score is not provided (undefined), it defaults to 'N/A'
-  nutriScore = nutriScore ?? "N/A";
-  novaScore = novaScore ?? "N/A";
-  ecoScore = ecoScore ?? "N/A";
+  const nutriDetails = nutriScoreDetails(nutriScore ?? 'N/A');
+
   return (
     <div className="my-8 p-4 bg-white rounded-lg shadow">
       <h2 className="text-xl font-bold mb-4">Matching with your preferences</h2>
       <div className="flex flex-wrap gap-4">
         <div className="flex items-center gap-2">
-          <div
-            className={`p-2 text-white rounded-full ${nutriScoreColor(
-              nutriScore
-            )}`}
-          >
-            Nutri-Score {nutriScore}
+          <div className={`p-2 text-white rounded-full ${nutriDetails.className}`}>
+            {nutriDetails.message}
           </div>
-          <p>Bad nutritional quality</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="bg-yellow-400 p-2 rounded-full text-white">
-            NOVA {novaScore}
+            NOVA {novaScore ?? 'N/A'}
           </div>
           <p>Ultra processed foods</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="bg-green-500 p-2 rounded-full text-white">
-            Eco-Score {ecoScore}
+            Eco-Score {ecoScore ?? 'N/A'}
           </div>
           <p>Low environmental impact</p>
         </div>
@@ -99,6 +93,7 @@ const PreferencesSection = ({
     </div>
   );
 };
+
 
 const nutriScoreColor = (score: string) => {
   switch (score) {
@@ -116,6 +111,23 @@ const nutriScoreColor = (score: string) => {
       return "bg-gray-300";
   }
 };
+const nutriScoreDetails = (score: string) => {
+  switch (score) {
+    case 'A':
+      return { className: 'bg-green-500', message: 'Nutri-Score A: Very good nutritional quality' };
+    case 'B':
+      return { className: 'bg-green-400', message: 'Nutri-Score B: Good nutritional quality' };
+    case 'C':
+      return { className: 'bg-yellow-400', message: 'Nutri-Score C: Average nutritional quality' };
+    case 'D':
+      return { className: 'bg-orange-500', message: 'Nutri-Score D: Poor nutritional quality' };
+    case 'E':
+      return { className: 'bg-red-600', message: 'Nutri-Score E: Bad nutritional quality' };
+    default:
+      return { className: 'bg-gray-300', message: 'Nutri-Score: N/A' };
+  }
+};
+
 const HealthSection = ({
   ingredients,
   ingredientsImage,
@@ -334,25 +346,27 @@ const Home: React.FC = () => {
   const [barcode, setBarcode] = useState("");
   const [isActive, setIsActive] = React.useState(false);
 
-  const handleDetected = (code: string) => {
-    setBarcode(code); // Set the detected barcode into state
-    setIsActive(false); // Optionally stop scanning after detection
-  };
+  const handleDetected = async (code: string) => {
+    setInputValue(code);  // Update the input field with the detected barcode
+    await fetchProductData(code);  // Fetch product data using the barcode
+    setIsActive(false);  // Optionally deactivate the scanner after detection
+};
 
-  const fetchProductData = async (barcode: string): Promise<void> => {
-    try {
-      const response = await fetch(
-        `https://world.openfoodfacts.net/api/v2/product/${barcode}`
-      );
+const fetchProductData = async (barcode: string): Promise<void> => {
+  if (!barcode) return;  // Prevent fetching if the barcode is empty
+  try {
+      const response = await fetch(`https://world.openfoodfacts.net/api/v2/product/${barcode}`);
       if (!response.ok) {
-        throw new Error("Failed to fetch product data");
+          throw new Error("Failed to fetch product data");
       }
       const data = await response.json();
-      setProductData(data);
-    } catch (error) {
+      setProductData(data);  // Update state with the fetched product data
+  } catch (error) {
       console.error("Fetching error:", error);
-    }
-  };
+  }
+};
+
+
 
   const handleSearch = debounce((value: string): void => {
     if (value && /^\d+$/.test(value)) {
@@ -426,20 +440,16 @@ const Home: React.FC = () => {
             Search
           </Button>
           <div>
-      <h1>Scan a Barcode</h1>
-      <button onClick={() => setIsActive(!isActive)}>
-        {isActive ? "Stop Scanning" : "Start Scanning"}
-      </button>
-
-      {isActive && (
-        <BarcodeScanner
-          isActive={isActive}
-          onScanned={handleDetected}
-        />
-      )}
-
-      {/* Always render the barcode display, update only if a new barcode is detected */}
-      <p>Detected Barcode: {barcode || "No barcode detected"}</p>
+          <button onClick={() => setIsActive(!isActive)}>
+                        {isActive ? "Stop Scanning" : "Start Scanning"}
+                    </button>
+                    {isActive && (
+                        <BarcodeScanner
+                            isActive={isActive}
+                            onScanned={handleDetected}
+                        />
+                    )}
+                    <p>Detected Barcode: {barcode || "No barcode detected"}</p>
     </div>
           {productData && (
             <div className="container mx-auto mt-8 p-4">
@@ -510,8 +520,9 @@ const Home: React.FC = () => {
                 additives={productData.product.additives_tags}
                 nutriScore={productData.product.nutriscore_grade}
                 positivePoints={
-                  productData.product.nutriscore_data.positive_points
-                }
+                  productData.product.nutriscore_data.positive_points || undefined
+                } 
+                
                 proteinsPoints={
                   productData.product.nutriscore_data.proteins_points
                 }
