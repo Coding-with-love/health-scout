@@ -14,33 +14,38 @@ const BarcodeScanner = (props: ScannerProps): React.ReactElement => {
     if (props.isActive) {
       Quagga.init({
         inputStream: {
-          type: 'LiveStream',
-          target: videoRef.current ?? undefined, // Pass the video container ref here
-          constraints: {
-            facingMode: 'environment',
-            width: 640,
-            height: 480
-          }
+            name: "Live",
+            type: "LiveStream",
+            target: videoRef.current ?? undefined, // Ensure this is rendered and available
+            constraints: {
+                facingMode: "environment", // Use the rear-facing camera
+                width: 640,
+                height: 480
+            }
         },
         decoder: {
-          readers: ['code_128_reader'] // specify barcode formats here
-        },
-        locate: true // enables barcode location
-      }, function(err) {
+            readers: ["code_128_reader", "upc_reader", "ean_reader"] // As an example
+        }
+    }, function(err) {
         if (err) {
-          console.error(err);
-          return;
+            console.error("Initialization error:", err);
+            return;
         }
+        console.log("Initialization succeeded");
         Quagga.start();
-      });
-
-      Quagga.onDetected((result) => {
-        const code = result.codeResult.code;
-        if (props.onScanned) {
-          props.onScanned(code);
-        }
-        Quagga.stop(); // Stop scanning after first successful detection
-      });
+    });
+    
+    Quagga.onDetected((result) => {
+      console.log("Detection result:", result);
+      if (result && result.codeResult && result.codeResult.code) {
+          console.log("Decoded barcode:", result.codeResult.code);
+          if (props.onScanned) {
+            props.onScanned(result.codeResult.code);
+          }
+          Quagga.stop(); // Optional: stop after first successful scan
+      }
+  });
+  
     }
 
     return () => {
