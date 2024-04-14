@@ -113,15 +113,15 @@ const nutriScoreColor = (score: string) => {
 };
 const nutriScoreDetails = (score: string) => {
   switch (score) {
-    case 'A':
+    case 'a':
       return { className: 'bg-green-500', message: 'Nutri-Score A: Very good nutritional quality' };
-    case 'B':
+    case 'b':
       return { className: 'bg-green-400', message: 'Nutri-Score B: Good nutritional quality' };
-    case 'C':
+    case 'c':
       return { className: 'bg-yellow-400', message: 'Nutri-Score C: Average nutritional quality' };
-    case 'D':
+    case 'd':
       return { className: 'bg-orange-500', message: 'Nutri-Score D: Poor nutritional quality' };
-    case 'E':
+    case 'e':
       return { className: 'bg-red-600', message: 'Nutri-Score E: Bad nutritional quality' };
     default:
       return { className: 'bg-gray-300', message: 'Nutri-Score: N/A' };
