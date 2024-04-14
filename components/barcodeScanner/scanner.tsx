@@ -1,37 +1,76 @@
-import React, { useEffect, useRef } from 'react';
-import { BrowserMultiFormatReader, NotFoundException, Result } from '@zxing/library';
+import React, { useEffect, useRef, useState } from 'react';
+import Quagga from 'quagga-scanner';  // Assuming 'quagga-scanner' is the correct library
 
-const BarcodeScanner = ({ onDetected }: { onDetected: (text: string) => void }) => {
+// Define a TypeScript interface for the component's props
+interface BarcodeScannerProps {
+    onBarcodeDetected: (code: string) => void;
+}
+
+const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onBarcodeDetected }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isQuaggaInitialized, setIsQuaggaInitialized] = useState(false);
 
   useEffect(() => {
-    const codeReader = new BrowserMultiFormatReader();
-    codeReader.listVideoInputDevices()
-      .then((videoInputDevices) => {
-        if (videoInputDevices.length === 0) {
-          throw new Error('No video devices found');
+    async function initQuagga() {
+      try {
+        const mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment", width: 640, height: 480 }
+        });
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = mediaStream;
+          videoRef.current.play().catch(console.error);
         }
-        const selectedDeviceId = videoInputDevices[0].deviceId;
-        // Continuously decode from video stream
-        codeReader.decodeFromVideoDevice(selectedDeviceId, videoRef.current, (result, err) => {
-          if (result) {
-            onDetected(result.getText()); // This method extracts the text from the Result object
-            codeReader.reset(); // Resets the decoder
-          } else if (err && !(err instanceof NotFoundException)) {
-            console.error(err);
+
+        Quagga.init({
+          inputStream: {
+            type: "LiveStream",
+            target: videoRef.current || undefined,
+          },
+          decoder: {
+            readers: ["code_128_reader", "upc_reader", "ean_reader", "ean_8_reader",
+                      "code_39_reader", "code_39_vin_reader", "codabar_reader",
+                      "upc_e_reader", "i2of5_reader"]
+          },
+          locate: true,
+        }, (err) => {
+          if (err) {
+            console.error('Error initializing Quagga:', err);
+            return;
+          }
+          Quagga.start();
+          setIsQuaggaInitialized(true);
+        });
+
+        Quagga.onDetected((result) => {
+          if (result && result.codeResult && result.codeResult.code) {
+            onBarcodeDetected(result.codeResult.code);
           }
         });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+      } catch (error) {
+        console.error('Error accessing the media devices.', error);
+      }
+    }
+
+    initQuagga();
 
     return () => {
-      codeReader.reset(); // Ensure resources are released on component unmount
+      if (isQuaggaInitialized) {
+        Quagga.offDetected((result) => {
+          if (result && result.codeResult && result.codeResult.code) {
+            onBarcodeDetected(result.codeResult.code);
+          }
+        });
+        Quagga.stop();
+      }
     };
-  }, [onDetected]);
+  }, [onBarcodeDetected, isQuaggaInitialized]);
 
-  return <video ref={videoRef} style={{ width: '100%' }} />;
+  return (
+    <div>
+      <video ref={videoRef} style={{ width: '100%' }} autoPlay playsInline muted />
+    </div>
+  );
 };
 
 export default BarcodeScanner;

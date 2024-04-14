@@ -314,11 +314,15 @@ const Component: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [productData, setProductData] = useState<ProductData | null>(null);
   const [barcode, setBarcode] = useState('');
-
+  const [detectedBarcode, setDetectedBarcode] = useState('');
  
   const handleDetected = (barcodeValue: string) => {
     setBarcode(barcodeValue);
     console.log(`Barcode detected: ${barcodeValue}`);
+  };
+  const handleBarcodeDetected = (barcode: any) => {
+    setDetectedBarcode(barcode);
+    console.log(`Barcode detected: ${barcode}`);
   };
  
 
@@ -394,9 +398,9 @@ const Component: React.FC = () => {
           Search
         </Button>
         <div>
-      <h1>Scan your Barcode</h1>
-      <BarcodeScanner onDetected={handleDetected} />
-      <p>Detected Barcode: {barcode}</p>
+      <h1>Scan a Barcode</h1>
+      <BarcodeScanner onBarcodeDetected={handleBarcodeDetected} />
+      <p>Detected Barcode: {detectedBarcode}</p>
     </div>
         {productData && (
           <div className="container mx-auto mt-8 p-4">
