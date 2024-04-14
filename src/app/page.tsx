@@ -502,13 +502,14 @@ const fetchProductData = async (barcode: string): Promise<void> => {
             </div>
           )}
 
-          {productData && productData.product && (
-            <PreferencesSection
-              nutriScore={productData.product.nutriscore_grade}
-              novaScore={productData.product.nova_group}
-              ecoScore={productData.product.ecoscore_grade}
-            />
-          )}
+{productData && productData.product && (
+    <PreferencesSection
+        nutriScore={productData.product.nutriscore_grade}
+        novaScore={productData.product.nova_group}
+        ecoScore={productData.product.ecoscore_grade}
+    />
+)}
+
           {productData && productData.product && (
             <>
               <HealthSection
