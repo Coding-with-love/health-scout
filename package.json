@@ -18,7 +18,6 @@
     "quagga": "^0.12.1",
     "react": "^18",
     "react-dom": "^18",
-    "react-webcam-barcode-scanner": "^0.0.2-rc2",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7"
   },
