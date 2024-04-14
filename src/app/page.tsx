@@ -67,27 +67,41 @@ const PreferencesSection = ({
 }) => {
   // If a score is not provided (undefined), it defaults to 'N/A'
   const nutriDetails = nutriScoreDetails(nutriScore ?? 'N/A');
+  const novaDetails = noveScoreDetails(novaScore ?? 'N/A');
+  const ecoDetails = ecoScoreDetails(ecoScore ?? 'N/A');
+  ecoScore = ecoScore?.toUpperCase() ?? 'N/A';
+  nutriScore = nutriScore?.toUpperCase() ?? "N/A";
+  novaScore = novaScore?.toString() ?? "N/A";
 
   return (
     <div className="my-8 p-4 bg-white rounded-lg shadow">
       <h2 className="text-xl font-bold mb-4">Matching with your preferences</h2>
       <div className="flex flex-wrap gap-4">
-        <div className="flex items-center gap-2">
-          <div className={`p-2 text-white rounded-full ${nutriDetails.className}`}>
-            {nutriDetails.message}
+     <div className="flex items-center gap-2">
+          <div
+            className={`p-2 text-white rounded-full ${nutriScoreColor(
+              nutriScore
+            )}`}
+          >
+            Nutri-Score {nutriScore}
           </div>
+          <p>{nutriDetails.message}</p>
+          </div>
+        <div className="flex items-center gap-2">
+          <div className={`p-2 text-white rounded-full ${novaDetails.className}`}>
+            NOVA {novaScore}
+          </div>
+          <p>{novaDetails.message}</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="bg-yellow-400 p-2 rounded-full text-white">
-            NOVA {novaScore ?? 'N/A'}
+          <div
+            className={`p-2 text-white rounded-full ${ecoScoreDetails(
+              ecoScore
+            ).className}`}
+          >
+            Eco-Score {ecoScore}
           </div>
-          <p>Ultra processed foods</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="bg-green-500 p-2 rounded-full text-white">
-            Eco-Score {ecoScore ?? 'N/A'}
-          </div>
-          <p>Low environmental impact</p>
+          <p>{ecoScoreDetails(ecoScore).message}</p>
         </div>
       </div>
     </div>
@@ -111,22 +125,61 @@ const nutriScoreColor = (score: string) => {
       return "bg-gray-300";
   }
 };
-const nutriScoreDetails = (score: string) => {
-  switch (score) {
-    case 'A':
-      return { className: 'bg-green-500', message: 'Nutri-Score A: Very good nutritional quality' };
-    case 'B':
-      return { className: 'bg-green-400', message: 'Nutri-Score B: Good nutritional quality' };
-    case 'C':
-      return { className: 'bg-yellow-400', message: 'Nutri-Score C: Average nutritional quality' };
-    case 'D':
-      return { className: 'bg-orange-500', message: 'Nutri-Score D: Poor nutritional quality' };
-    case 'E':
-      return { className: 'bg-red-600', message: 'Nutri-Score E: Bad nutritional quality' };
-    default:
-      return { className: 'bg-gray-300', message: 'Nutri-Score: N/A' };
+const nutriScoreDetails = (score: string | undefined) => {
+  // Ensure score is in uppercase
+  const upperScore = score ? score.toUpperCase() : '';
+
+  switch (upperScore) {
+      case 'A':
+          return { className: 'bg-green-500', message: 'Very good nutritional quality' };
+      case 'B':
+          return { className: 'bg-green-400', message: 'Good nutritional quality' };
+      case 'C':
+          return { className: 'bg-yellow-400', message: 'Average nutritional quality' };
+      case 'D':
+          return { className: 'bg-orange-500', message: 'Poor nutritional quality' };
+      case 'E':
+          return { className: 'bg-red-600', message: 'Bad nutritional quality' };
+      default:
+          return { className: 'bg-gray-300', message: 'N/A' };
   }
 };
+
+const noveScoreDetails = (score: string | number | undefined) => {
+  switch (score) {
+    case 1:
+      return { className: 'bg-green-500', message: 'Unprocessed or minimally processed foods' };
+    case 2:
+      return { className: 'bg-green-300', message: 'Processed culinary ingredients' };
+    case 3:
+      return { className: 'bg-yellow-500', message: 'Processed foods' };
+    case 4:
+      return { className: 'bg-red-600', message: 'Ultra processed foods' };
+    default:
+      return { className: 'bg-gray-300', message: 'N/A' };
+  }
+};
+const ecoScoreDetails = (score: string | undefined) => {
+  switch (score) {
+    case 'A':
+      return { className: 'bg-green-500', message: 'Very low environmental impact' };
+    case 'B':
+      return { className: 'bg-green-400', message: 'Low environmental impact' };
+    case 'C':
+      return { className: 'bg-yellow-400', message: 'Moderate environmental impact' };
+    case 'D':
+      return { className: 'bg-orange-500', message: 'High environmental impact' };
+    case 'E':
+      return { className: 'bg-red-600', message: 'Very high environmental impact' };
+    case 'Not-applicable':
+      return { className: 'bg-gray-300', message: 'Not yet applicable for the category' };
+    case 'Unknown':
+      return { className: 'bg-gray-300', message: 'Unknown environmental impact' };
+    default:
+      return { className: 'bg-gray-300', message: 'N/A' };
+  }
+};
+
 
 const HealthSection = ({
   ingredients,
@@ -153,6 +206,7 @@ const HealthSection = ({
   saturatedFatPercentage,
   saltPercentage,
   energyServing,
+
 }: {
   ingredients: string;
   ingredientsImage: string;
@@ -204,6 +258,8 @@ const HealthSection = ({
   category = category || "N/A";
   energyMainUnit = energyMainUnit || "N/A";
 
+  const nutriDetails = nutriScoreDetails(nutriScore ?? 'N/A');
+  nutriScore = nutriScore?.toUpperCase() ?? "N/A";
   return (
     <div>
       <div className="my-8 p-4 bg-white rounded-lg shadow">
@@ -229,13 +285,29 @@ const HealthSection = ({
       <div className="my-8 p-4 bg-white rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">Food Processing</h2>
         <section>
+          <h3 className="font-bold">NOVA Classification</h3>
+          <p>
+            NOVA classification is a system that categorizes food based on the
+            extent and purpose of food processing.
+          </p>
           <div
             className={`p-2 ${novaScoreColor(
               novaScore || 0
             )} rounded-full text-white`}
           >
+
             <h3>NOVA {novaScore}</h3>
-            <p>Ultra processed foods</p>
+            <p>
+              {novaScore === 1
+                ? "Unprocessed or minimally processed foods"
+                : novaScore === 2
+                ? "Processed culinary ingredients"
+                : novaScore === 3
+                ? "Processed foods"
+                : novaScore === 4
+                ? "Ultra processed foods"
+                : "N/A"}
+            </p>
           </div>
           {additives.length > 0 ? (
             <div>
@@ -259,13 +331,20 @@ const HealthSection = ({
       <div className="my-8 p-4 bg-white rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">Nutrition</h2>
         <section>
+          <h3 className="font-bold">Nutri-Score</h3>
+          <p>
+            Nutri-Score is a color-coded nutrition label that classifies food
+            products according to their nutritional quality.
+          </p>
+         
           <div
-            className={`p-2 ${novaScoreColor(
-              novaScore || 0
-            )} rounded-full text-white`}
+            className={`p-2 text-white rounded-full ${nutriScoreColor(
+              nutriScore
+            )}`}
           >
-            <h3>Nutri-Score {nutriScore}</h3>
-            <p>Bad nutritional quality</p>
+            Nutri-Score {nutriScore}
+          
+          <p>{nutriDetails.message}</p>
           </div>
 
           <p className="mt-4">Positive Points: {positivePoints}</p>
@@ -277,7 +356,7 @@ const HealthSection = ({
             {fruitsPoints}/5
           </p>
           <br></br>
-          <p className="mt-4">Negative Points: {positivePoints}</p>
+          <p className="mt-4">Negative Points: {negativePoints}</p>
 
           <p>Energy: {energyPoints}/5</p>
           <p>Sugars: {sugarsPoints}/5</p>
