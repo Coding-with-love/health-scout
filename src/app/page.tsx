@@ -472,26 +472,13 @@ const fetchProductData = async (barcode: string): Promise<void> => {
             <Input
               aria-owns="search-results"
               className="w-[300px] sm:w-[400px] lg:w-[500px] xl:w-[600px]"
-              placeholder="Search for products"
+              placeholder="Search by Barcode"
               type="search"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
           </div>
-          <div className="hidden md:flex items-center space-x-4">
-            <Link
-              href="#"
-              className="font-medium text-gray-50 hover:underline dark:text-gray-400 dark:hover:underline"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="#"
-              className="font-medium text-gray-50 hover:underline dark:text-gray-400 dark:hover:underline"
-            >
-              Sign up
-            </Link>
-          </div>
+      
         </div>
       </header>
 
@@ -499,7 +486,7 @@ const fetchProductData = async (barcode: string): Promise<void> => {
       <main className="flex flex-col items-center justify-center flex-1 w-full">
         <div className="w-full max-w-lg p-4">
           <Input
-            aria-label="Search for products"
+            aria-label="Search by Barcode"
             className="w-full mb-4"
             placeholder="Enter barcode"
             type="search"
@@ -637,37 +624,7 @@ const fetchProductData = async (barcode: string): Promise<void> => {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="py-12 md:py-24">
-        <div className="container flex flex-col items-center justify-center gap-4 px-4 md:px-6 text-center">
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            © 2024 Product Scout. All rights reserved.
-          </span>
-          <div className="flex items-center gap-2">
-            <Link
-              href="#"
-              className="rounded-full border p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-            >
-              <span className="sr-only">Twitter</span>
-              <TwitterIcon className="w-4 h-4" />
-            </Link>
-            <Link
-              href="#"
-              className="rounded-full border p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-            >
-              <span className="sr-only">GitHub</span>
-              <GithubIcon className="w-4 h-4" />
-            </Link>
-            <Link
-              href="#"
-              className="rounded-full border p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-50"
-            >
-              <span className="sr-only">LinkedIn</span>
-              <LinkedinIcon className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </footer>
+    
     </div>
   );
 };
