@@ -34,9 +34,12 @@ Before running this project, make sure you have the following installed:
    ```bash
    git clone https://github.com/Coding-with-love/health-scout.git
    cd health-scout
+   ```
 2. Install dependencies
   ``` bash
   npm install
+  ```
 3. Run the application in development mode:
   ```bash
   npm start
+```
